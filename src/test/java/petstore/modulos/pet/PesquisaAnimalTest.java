@@ -1,16 +1,18 @@
 package petstore.modulos.pet;
 
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import petstore.testBase.TestBase;
-
-import static io.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.*;
+import java.io.File;
+import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchema;
+import static org.hamcrest.Matchers.equalTo;
 
 public class PesquisaAnimalTest extends TestBase {
     @Test
-    @DisplayName(" Pesquisar por um pet inexistente - StatusCode 404")
+    @DisplayName("Deve pesquisar por um pet inexistente ")
     public void testPesquisarPorUmPetInexistenteComSucesso() {
         int petId = 555;
 
@@ -20,25 +22,25 @@ public class PesquisaAnimalTest extends TestBase {
                 .get("/pet/" + petId)
             .then()
                 .body("message", equalTo("Pet not found"))
-                    .statusCode(404);
-
+                    .statusCode(404)
+                        .log().body();
     }
 
     @Test
-    @DisplayName("Pesquisar por pets com status pending - StatusCode 200")
-    public void testPesquisarPorPetsComStatusPendente(){
-
-        given()
-            .contentType(ContentType.JSON)
+    @DisplayName("Deve pesquisar por pets com status pending")
+    public void testPesquisarPorPetsComStatusPendente() {
+        Response response = given()
+                .contentType(ContentType.JSON)
                 .queryParam("status", "pending")
-        .when()
-            .get("/pet/findByStatus")
-        .then().assertThat()
-                .statusCode(200)
-                //Atualização constante dos nomes ou ids
-                .body("[0].name", equalTo("Json Whiskers"))
-                .body("[1].name", equalTo("doggie"));
-
+            .when()
+                .get("/pet/findByStatus");
+        if (response.jsonPath().getList("$").size() == 0) {
+            response.then().statusCode(200).body(equalTo("[]"))
+                .log().body();
+        } else {
+            response.then().statusCode(200).body(matchesJsonSchema(new File("schema.json")))
+                .log().body();
+        }
     }
 }
 

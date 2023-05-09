@@ -1,4 +1,5 @@
 package petstore.modulos.pet;
+import com.github.javafaker.Faker;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,20 +13,21 @@ public class AtualizarAnimalTest extends TestBase {
 
 
         @Test
-        @DisplayName("Atualizar dados de um pet existente - StatusCode 404")
+        @DisplayName("Deve atualizar dados de um pet existente")
         public void testAtualizarDadosDeUmPetExistenteComSucesso() {
+            Faker faker = new Faker();
+            String name = faker.name().firstName();
             int petId = 243;
 
-            // Faz a requisição PUT para atualizar os dados do pet
             given()
                     .contentType(ContentType.JSON)
                     .body("{\n" +
                             "  \"id\": " + petId + ",\n" +
                             "  \"category\": {\n" +
                             "    \"id\": 243,\n" +
-                            "    \"name\": \"NerinPet1\"\n" +
+                            "    \"name\": \"" + name + "\"\n" +
                             "  },\n" +
-                            "  \"name\": \"NerinPet1\",\n" +
+                            "  \"name\": \"" + name + "\",\n" +
                             "  \"photoUrls\": [\n" +
                             "    \"string\"\n" +
                             "  ],\n" +
@@ -39,19 +41,20 @@ public class AtualizarAnimalTest extends TestBase {
                             "}")
                     .when()
                     .put("/pet/")
-                    .then()
+                .then()
                     .statusCode(200);
 
             // Faz a requisição GET para verificar se as informações do pet foram atualizadas
             given()
                     .contentType(ContentType.JSON)
-                    .when()
+                .when()
                     .get("/pet/" + petId)
-                    .then()
+                .then()
                     .statusCode(200)
-                    .body("category.name", equalTo("NerinPet1"))
-                    .body("name", equalTo("NerinPet1"))
-                    .body("status", equalTo("sold"));
+                        .body("category.name", equalTo(name))
+                            .body("name", equalTo(name))
+                                .body("status", equalTo("sold"))
+                                    .log().body();
         }
 
 }

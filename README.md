@@ -4,7 +4,7 @@ Projeto foi criado com o objetivo de certificar conhecimentos de automação de 
 
 ## Tecnologias utilizadas
 
-- [JAVA](https://docs.oracle.com/en/java/)
+- [JAVA 11](https://docs.oracle.com/en/java/)
 - [RestAssured](https://github.com/rest-assured/rest-assured/wiki/GettingStarted)
 - [Junit](https://junit.org/junit5/)
 - [Maven](https://maven.apache.org/)
@@ -13,22 +13,22 @@ Projeto foi criado com o objetivo de certificar conhecimentos de automação de 
 
 - [IntelliJ IDEA](https://www.jetbrains.com/pt-br/idea/)
 
-**Arquivos e diretórios:**
+## Arquivos e diretórios:
 
 - /src/test/java/petstore/dataFactory:
   Diretório que contém a refatoração do body Json para que tenha um código limpo;
 
-- /src/test/java/petstore/modulos/pet
+- /src/test/java/petstore/modulos/pet:
   Testes relacionados ao módulo pet, para melhor organização;
 
-- /src/test/java/petstore/modulos/store
+- /src/test/java/petstore/modulos/store:
   Testes relacionados ao módulo store, para melhor organização;
 
-- /src/test/java/petstore/pojo
+- /src/test/java/petstore/pojo:
   Diretório que contém getters e setters para uso  no dataFactory;
 
-- /src/test/java/petstore/testBase
-  Diretório que contém um @BeforeEach da baseURL, para que não haja necessidade de incluí-lo em cada classe de teste.
+- /src/test/java/petstore/testBase:
+  Diretório que contém um @BeforeEach da baseURL, para reutilização do código usando herança.
 
 
 
